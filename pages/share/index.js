@@ -126,8 +126,8 @@ Page({
       success(res) {
         let wpa = res.authSetting["scope.writePhotosAlbum"];
 
-        // console.log(res.authSetting)
-        if (wpa == false || wpa == undefined) {
+        console.log(res.authSetting)
+        if (wpa == false) {
           wx.showModal({
             title: "提示",
             content: "保存照片功能,需要您的相册访问授权,请先授权再使用该功能。",
