@@ -4,7 +4,7 @@
   		<view class="flex padding solid-bottom">
   			<view class="flex-sub"></view>
   			<view class="flex-sub">
-  				<button class="cu-btn bg-green round lg" open-type="getUserInfo" bindgetuserinfo="saveUserInfo">授权登录</button>
+  				<button class="cu-btn bg-green round lg" bindtap="getUserInfo">授权登录</button>
   			</view>
   			<view class="flex-sub"></view>
   		</view>
@@ -39,6 +39,12 @@
   		<navigator class="content" hover-class="none" bindtap="click" url="../bmi/index">
   			<text class="cuIcon-hot text-red"></text>
   			<text class="text-grey">BMI计算</text>
+  		</navigator>
+  	</view>
+		<view class="cu-item arrow">
+  		<navigator class="content" hover-class="none" bindtap="click" url="../bmp/index">
+  			<text class="cuIcon-like text-pink"></text>
+  			<text class="text-grey">心率测量</text>
   		</navigator>
   	</view>
   	<view class="cu-item arrow">
