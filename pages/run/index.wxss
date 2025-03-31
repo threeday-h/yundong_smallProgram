@@ -1,1 +1,356 @@
 /* pages/run/index.wxss */
+
+/* 导航栏样式 */
+.nav {
+  height: 90rpx;
+  white-space: nowrap;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.nav .cu-item {
+  height: 90rpx;
+  display: inline-block;
+  line-height: 90rpx;
+  margin: 0 30rpx;
+  transition: all 0.3s ease;
+}
+
+.nav .cu-item.cur {
+  border-bottom: 4rpx solid;
+  font-weight: bold;
+}
+
+/* 数据卡片样式 */
+.stats-card {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  right: 20rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.stats-container {
+  padding: 30rpx;
+}
+
+/* 时间显示 */
+.time-display {
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.time-value {
+  font-size: 60rpx;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10rpx;
+}
+
+/* 指标行 */
+.metrics-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20rpx;
+}
+
+.metric-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx;
+}
+
+.stat-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.icon-wrapper {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 10rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-icon {
+  background-color: #1296db;
+}
+
+.calorie-icon {
+  background-color: #e54d42;
+}
+
+.pace-icon {
+  background-color: #f37b1d;
+}
+
+.distance-icon {
+  background-color: #39b54a;
+}
+
+.metric-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin: 10rpx 0;
+}
+
+.metric-unit {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 5rpx;
+}
+
+/* 完全重新设计的开始按钮 */
+.start-button-circle {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #39b54a, #8dc63f);
+  position: relative;
+  box-shadow: 0 6rpx 20rpx rgba(57, 181, 74, 0.3);
+  transition: all 0.3s ease;
+}
+
+.start-button-circle:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 10rpx rgba(57, 181, 74, 0.2);
+}
+
+.start-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 40rpx;
+  font-weight: bold;
+}
+
+/* 户外跑模式下的按钮容器 */
+.center-button-container {
+  position: absolute;
+  bottom: 200rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* 室内跑模式下的按钮容器 */
+.indoor-controls {
+  margin-bottom: 60rpx;
+  display: flex;
+  justify-content: center;
+}
+
+/* 移除之前的按钮样式，避免冲突 */
+.start-button-new {
+  display: none;
+}
+
+button.start-button-new {
+  display: none;
+}
+
+/* 室内跑样式 */
+.indoor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: linear-gradient(to bottom, #f0f8ff, #e6f2ff);
+  padding: 20rpx;
+}
+
+.indoor-stats-card {
+  position: relative;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20rpx;
+}
+
+/* 重新设计跑步动画区域，使图片与背景更加融合 */
+.runner-animation {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20rpx 0;
+  position: relative;
+}
+
+.running-track {
+  width: 100%;
+  height: 450rpx;
+  background: linear-gradient(to bottom, #e8f4ff, #d8ecff);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 20rpx;
+}
+
+/* 添加背景装饰元素 */
+.running-track:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: 1;
+}
+
+/* 优化跑步者图片 */
+.runner-image {
+  width: 280rpx;
+  height: 280rpx;
+  z-index: 10;
+  opacity: 0.9;
+  filter: drop-shadow(0 4rpx 8rpx rgba(0, 0, 0, 0.1));
+}
+
+.runner-image.running {
+  animation: bounce 0.8s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12rpx);
+  }
+}
+
+/* 重新设计跑道线 */
+.track-line {
+  position: absolute;
+  bottom: 100rpx;
+  left: 0;
+  right: 0;
+  height: 2rpx;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(100, 150, 255, 0.3) 10%, 
+    rgba(100, 150, 255, 0.3) 20%, 
+    transparent 30%,
+    transparent 40%,
+    rgba(100, 150, 255, 0.3) 50%,
+    rgba(100, 150, 255, 0.3) 60%,
+    transparent 70%,
+    transparent 80%,
+    rgba(100, 150, 255, 0.3) 90%,
+    rgba(100, 150, 255, 0.3) 100%
+  );
+  background-size: 200rpx 100%;
+  animation: moveTrack 2s infinite linear;
+}
+
+/* 添加云朵装饰 */
+.cloud-decoration {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cloud {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  filter: blur(10rpx);
+}
+
+.cloud-1 {
+  width: 120rpx;
+  height: 60rpx;
+  top: 40rpx;
+  left: 80rpx;
+  animation: floatCloud 20s infinite linear;
+}
+
+.cloud-2 {
+  width: 100rpx;
+  height: 50rpx;
+  top: 80rpx;
+  right: 100rpx;
+  animation: floatCloud 15s infinite linear reverse;
+}
+
+@keyframes floatCloud {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(50rpx);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* 控制按钮组 */
+.control-buttons {
+  position: absolute;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 30rpx;
+}
+
+.control-btn {
+  padding: 20rpx 60rpx;
+  border-radius: 100rpx;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.pause-btn {
+  background: linear-gradient(135deg, #1296db, #0081ff);
+}
+
+.resume-btn {
+  background: linear-gradient(135deg, #f37b1d, #fbbd08);
+}
+
+.stop-btn {
+  background: linear-gradient(135deg, #e54d42, #f37b1d);
+}
+
+/* 特别为配速添加样式 */
+.speed-icon {
+  background-image: url('data:image/svg+xml;base64,...'); /* 使用与其他图标相同的样式 */
+}

@@ -1,99 +1,161 @@
-<view class="flex justify-center">
-	<map id="myMap" wx:if="{{runType == 0}}" style="width: 100%; height: 300px;" show-location latitude="{{latitude}}" longitude="{{longitude}}" polyline="{{polyline}}"></map>
-</view>
-<view class="bg-white margin-sm">
-	<view class="flex">
-		<view class="flex-sub margin-left margin-right">
-			<view class="cu-bar">
-				<view class="action">
-					<text class="cuIcon-titles text-blue"></text>
-					<text wx:if="{{runType==0}}">户外跑</text>
-					<text wx:if="{{runType==1}}">室内跑</text>
+<view class="container">
+	<!-- 顶部地图区域 -->
+	<view class="map-container">
+		<map id="myMap" wx:if="{{runType == 0}}" style="width: 100%; height: 300px;" show-location latitude="{{latitude}}" longitude="{{longitude}}" polyline="{{polyline}}"></map>
+		<view class="map-overlay" wx:if="{{runType == 0}}">
+			<view class="run-type-badge">
+				<t-icon name="run" size="20" color="#fff" />
+				<text>户外跑</text>
+			</view>
+		</view>
+		<view class="run-type-header" wx:if="{{runType == 1}}">
+			<view class="indoor-run-container">
+				<!-- 背景图 -->
+				<image class="indoor-bg-image" src="/icon/runer.svg" mode="aspectFill"></image>
+				
+				<!-- 背景装饰 -->
+				<view class="indoor-bg-decoration">
+					<view class="bg-overlay"></view>
+					<view class="track-line track-line-1"></view>
+					<view class="track-line track-line-2"></view>
+				</view>
+				
+				<!-- 主要内容 -->
+				<view class="indoor-content">
+					<view class="indoor-icon-container">
+						<view class="icon-pulse-ring"></view>
+						<t-icon name="run" size="48" color="#ffffff" />
+					</view>
+					<view class="indoor-text">
+						<text class="indoor-title">室内跑</text>
+						<text class="indoor-subtitle">Indoor Running</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+
+	<!-- 运动数据卡片 -->
+	<view class="stats-card">
+		<!-- 日期和时间 -->
+		<view class="date-time-section">
+			<t-icon name="time" size="20" color="#0052d9" />
+			<text class="date-time-text">{{date}} {{time}}</text>
+		</view>
+
+		<!-- 主要数据 -->
+		<view class="data-grid">
+			<view class="data-grid-item">
+				<text class="grid-item-label">总里程</text>
+				<view class="grid-item-value-container">
+					<text class="grid-item-value">{{distance_data}}</text>
+					<text class="grid-item-unit">公里</text>
+				</view>
+			</view>
+			
+			<view class="data-grid-item">
+				<text class="grid-item-label">运动时间</text>
+				<view class="grid-item-value-container">
+					<text class="grid-item-value">{{time_data}}</text>
+				</view>
+			</view>
+			
+			<view class="data-grid-item">
+				<text class="grid-item-label">平均配速</text>
+				<view class="grid-item-value-container">
+					<text class="grid-item-value">{{speed_data}}</text>
+					<text class="grid-item-unit">分/公里</text>
+				</view>
+			</view>
+			
+			<view class="data-grid-item">
+				<text class="grid-item-label">消耗卡路里</text>
+				<view class="grid-item-value-container">
+					<text class="grid-item-value">{{kcal_data}}</text>
+					<text class="grid-item-unit">kcal</text>
+				</view>
+			</view>
+		</view>
+
+		<!-- 配速图表 -->
+		<view class="chart-section">
+			<view class="section-title">
+				<t-icon name="chart-line" size="20" color="#0052d9" />
+				<text>配速分析</text>
+			</view>
+			
+			<!-- 可视化配速图表 -->
+			<view class="pace-chart" wx:if="{{km_speed_data.length > 0}}">
+				<view class="chart-y-axis">
+					<text wx:for="{{[7,6,5,4,3]}}" wx:key="index" class="y-axis-label">{{item}}′</text>
+				</view>
+				
+				<view class="chart-content">
+					<view class="chart-bars">
+						<view class="chart-bar" wx:for="{{km_speed_data}}" wx:key="index">
+							<view class="bar-column" style="height: {{calculateBarHeight(item)}}%;">
+								<text class="bar-value">{{item}}</text>
+							</view>
+							<text class="bar-label">{{index + 1}}km</text>
+						</view>
+					</view>
+					
+					<view class="chart-grid-lines">
+						<view class="grid-line" wx:for="{{[0,1,2,3,4]}}" wx:key="index"></view>
+					</view>
+				</view>
+			</view>
+			
+			<!-- 空状态展示 -->
+			<view class="empty-state" wx:if="{{!km_speed_data || km_speed_data.length === 0}}">
+				<t-empty icon="info-circle-filled" description="暂无配速数据" />
+			</view>
+			
+			<!-- 原始图表 -->
+			<view class="original-chart" wx:if="{{km_speed_data.length > 0}}">
+				<canvas canvas-id="canvasLineA" id="canvasLineA" style="width:100%" class="charts" bindtouchstart="touchLineA" bindtouchmove="moveLineA" bindtouchend="touchEndLineA"></canvas>
+			</view>
+		</view>
+
+		<!-- 运动轨迹分析 -->
+		<view class="track-section" wx:if="{{runType == 0 && polyline[0].points.length > 0}}">
+			<view class="section-title">
+				<t-icon name="location" size="20" color="#0052d9" />
+				<text>轨迹分析</text>
+			</view>
+			
+			<view class="track-stats">
+				<view class="track-stat-item">
+					<text class="track-stat-label">起点</text>
+					<text class="track-stat-value">{{startLocation}}</text>
+				</view>
+				
+				<view class="track-stat-item">
+					<text class="track-stat-label">终点</text>
+					<text class="track-stat-value">{{endLocation}}</text>
+				</view>
+				
+				<view class="track-stat-item">
+					<text class="track-stat-label">最高海拔</text>
+					<text class="track-stat-value">{{maxAltitude}} m</text>
+				</view>
+				
+				<view class="track-stat-item">
+					<text class="track-stat-label">最低海拔</text>
+					<text class="track-stat-value">{{minAltitude}} m</text>
 				</view>
 			</view>
 		</view>
 		
-	</view>
-	</view>
-<view class="bg-white padding margin-sm">
-	<view class="flex">
-		<view class="flex-sub margin-left margin-right">
-			<view class="cu-bar">
-				<view class="action">
-					<text class="cuIcon-title text-blue"></text>运动时长
-				</view>
-			</view>
-			<view class="flex ">
-				<text class="margin-left text-bold text-xxl">{{time_data}}</text>
-			</view>
-		</view>
-		<view class="flex-sub margin-left margin-right">
-			<view class="cu-bar ">
-				<view class="action">
-					<text class="cuIcon-title text-green"></text>运动距离
-				</view>
-			</view>
-			<view class="flex ">
-				<text class="margin-left text-bold text-xxl">{{distance_data}} Km</text>
-			</view>
+		<!-- 空状态展示 - 无轨迹数据 -->
+		<view class="empty-state" wx:if="{{runType == 0 && (!polyline[0].points || polyline[0].points.length === 0)}}">
+			<t-empty icon="location" description="暂无轨迹数据" />
 		</view>
 	</view>
 
-	<view class="flex">
-		<view class="flex-sub margin-left margin-right">
-			<view class="cu-bar ">
-				<view class="action">
-					<text class="cuIcon-title text-orange"></text>平均配速
-				</view>
-			</view>
-			<view class="flex">
-				<text class="margin-left text-bold text-xxl">{{speed_data}}</text>
-			</view>
-		</view>
-		<view class="flex-sub margin-bottom margin-left margin-right">
-			<view class="cu-bar ">
-				<view class="action">
-					<text class="cuIcon-title text-red"></text>卡路里
-				</view>
-			</view>
-			<view class="flex">
-				<text class="margin-left text-bold text-xxl">{{kcal_data}} Kcal</text>
-			</view>
-		</view>
+	<!-- 底部按钮 -->
+	<view class="bottom-buttons">
+		<t-button theme="danger" size="large" icon="delete" bindtap="deleteRecord">删除记录</t-button>
+		<t-button theme="primary" size="large" icon="share" bindtap="shareRecord">分享成就</t-button>
 	</view>
-</view>
-
-<view class="bg-white margin-sm padding">
-	<view class="flex">
-		<view class="flex-sub margin-left margin-right">
-			<view class="cu-bar">
-				<view class="action">
-					<text class="cuIcon-titles text-orange"></text>每公里配速
-				</view>
-			</view>
-			<view class="flex">
-				<canvas canvas-id="canvasLineA" id="canvasLineA" style="width:100%" class="charts" bindtouchstart="touchLineA" bindtouchmove="moveLineA" bindtouchend="touchEndLineA"></canvas>
-			</view>
-		</view>
-	</view>
-</view>
-<view class="bg-white margin-sm padding">
-	<view class="flex">
-		<view class="flex-sub margin-left margin-right">
-			<view class="cu-bar">
-				<view class="action">
-					<text class="cuIcon-titles text-cyan"></text>运动海拔
-				</view>
-			</view>
-			<view class="flex">
-				<canvas canvas-id="canvasLineB" id="canvasLineB" style="width:100%" class="charts" bindtouchstart="touchLineB" bindtouchmove="moveLineB" bindtouchend="touchEndLineB"></canvas>
-			</view>
-		</view>
-	</view>
-</view>
-<view class="flex">
-	<button class="flex-sub cu-btn bg-blue round lg margin-left margin-right padding margin-bottom" bindtap="toShare">分享</button>
-</view>
-<view class="flex">
-	<button class="flex-sub cu-btn bg-red round lg margin-left margin-right padding margin-bottom" bindtap="delHistory">删除记录</button>
 </view>

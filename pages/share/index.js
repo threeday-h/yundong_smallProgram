@@ -13,6 +13,21 @@ Page({
     qtsheBackground: "../../icon/bg.png",
     timeStamp: 0,
     run_data: null,
+    polyline: [{
+      points: [],
+      color: "#07c160",
+      width: 2
+    }],
+    latitude: 0,
+    longitude: 0,
+    time_data: "00:00",
+    distance_data: "0.00",
+    speed_data: "0'00\"",
+    kcal_data: "0.00",
+    runType: 0,
+    currentDate: '',
+    screenHeight: 0,
+    screenWidth: 0
   },
 
   /**
@@ -20,16 +35,119 @@ Page({
    */
   onLoad: function (options) {
     wx.setNavigationBarTitle({
-      title: '运动分享',
+      title: '分享成就',
     })
-    this.data.id = options.id;
+    
+    // 获取设备信息
+    const systemInfo = wx.getSystemInfoSync();
+    this.setData({
+      screenHeight: systemInfo.windowHeight,
+      screenWidth: systemInfo.windowWidth
+    });
+    
+    // 设置当前日期
+    this.setCurrentDate();
+    
+    if (JSON.stringify(options) == "{}") {
+      wx.showModal({
+        title: '提示',
+        content: '参数传递错误',
+        showCancel: false,
+        success(res) {
+          if (res.confirm) {
+            wx.navigateBack()
+          }
+        }
+      })
+      return;
+    }
+    
     let run_data = JSON.parse(wx.getStorageSync('RunInfo-' + options.id));
-    this.data.run_data = run_data;
-    let timeStamp = new Date(options.id * 1000);
-    this.data.month = timeStamp.getMonth() + 1;
-    this.data.date = timeStamp.getDate();
-    this.data.hour = timeStamp.getHours();
-    this.data.minute = (timeStamp.getMinutes() < 10) ? "0" + timeStamp.getMinutes() : timeStamp.getMinutes();
+    
+    // 格式化配速数据
+    let time_data = run_data.time_data;
+    let distance_data = run_data.distance_data;
+    let kcal_data = run_data.kcal_data;
+    let points_data = run_data.points_data || [];
+    let speed_data = run_data.speed_data || "0'00\"";
+    let runType = run_data.runType || 0;
+    
+    // 设置数据
+    this.setData({
+      time_data: time_data,
+      distance_data: distance_data,
+      kcal_data: kcal_data,
+      speed_data: speed_data,
+      runType: runType
+    });
+    
+    // 如果是户外跑，设置地图数据
+    if (runType == 0 && points_data.length > 0) {
+      let polyline = [{
+        points: points_data,
+        color: "#07c160",
+        width: 4,
+        arrowLine: true
+      }];
+      
+      // 创建起点和终点标记
+      const startPoint = points_data[0];
+      const endPoint = points_data[points_data.length - 1];
+      
+      const markers = [
+        {
+          id: 1,
+          latitude: startPoint.latitude,
+          longitude: startPoint.longitude,
+          width: 25,
+          height: 25,
+          callout: {
+            content: '起点',
+            color: '#ffffff',
+            fontSize: 12,
+            borderRadius: 4,
+            bgColor: '#0052d9',
+            padding: 5,
+            display: 'ALWAYS'
+          },
+          iconPath: '/icon/start-marker.png'
+        },
+        {
+          id: 2,
+          latitude: endPoint.latitude,
+          longitude: endPoint.longitude,
+          width: 25,
+          height: 25,
+          callout: {
+            content: '终点',
+            color: '#ffffff',
+            fontSize: 12,
+            borderRadius: 4,
+            bgColor: '#07c160',
+            padding: 5,
+            display: 'ALWAYS'
+          },
+          iconPath: '/icon/end-marker.png'
+        }
+      ];
+      
+      // 计算地图中心点和缩放级别
+      this.setData({
+        polyline: polyline,
+        latitude: (startPoint.latitude + endPoint.latitude) / 2,
+        longitude: (startPoint.longitude + endPoint.longitude) / 2,
+        markers: markers
+      });
+      
+      // 延迟一下，确保地图加载完成后再调整视野
+      setTimeout(() => {
+        const mapCtx = wx.createMapContext('shareMap');
+        mapCtx.includePoints({
+          points: points_data,
+          padding: [80, 80, 80, 80]
+        });
+      }, 500);
+    }
 
     this.createNewImg();
   },
@@ -197,4 +315,100 @@ Page({
       }
     }
   },
+  // 设置当前日期
+  setCurrentDate: function() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    this.setData({
+      currentDate: `${year}年${month}月${day}日`
+    });
+  },
+  
+  // 保存图片
+  saveImage: function() {
+    this.vibrateFunc(1);
+    
+    wx.showLoading({
+      title: '保存中...',
+    });
+    
+    // 创建选择器
+    const query = wx.createSelectorQuery();
+    query.select('.share-card').boundingClientRect();
+    query.exec((res) => {
+      if (!res[0]) {
+        wx.hideLoading();
+        wx.showToast({
+          title: '生成图片失败',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      const cardHeight = res[0].height;
+      const cardWidth = res[0].width;
+      
+      wx.canvasToTempFilePath({
+        x: 0,
+        y: 0,
+        width: cardWidth,
+        height: cardHeight,
+        destWidth: cardWidth * 2,
+        destHeight: cardHeight * 2,
+        canvasId: 'shareCanvas',
+        success: (res) => {
+          wx.hideLoading();
+          // 保存图片到相册
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success: () => {
+              wx.showToast({
+                title: '保存成功',
+                icon: 'success'
+              });
+            },
+            fail: (err) => {
+              if (err.errMsg.indexOf('auth deny') >= 0) {
+                wx.showModal({
+                  title: "提示",
+                  content: "保存照片功能需要您的相册访问授权，请先授权再使用该功能。",
+                  confirmText: "授权",
+                  cancelText: "取消",
+                  success(res) {
+                    if (res.confirm) {
+                      wx.openSetting({});
+                    }
+                  }
+                });
+              } else {
+                wx.showToast({
+                  title: '保存失败',
+                  icon: 'none'
+                });
+              }
+            }
+          });
+        },
+        fail: (err) => {
+          wx.hideLoading();
+          console.error('生成图片失败', err);
+          wx.showToast({
+            title: '生成图片失败',
+            icon: 'none'
+          });
+        }
+      });
+    });
+  },
+  
+  // 分享给朋友
+  onShareAppMessage: function () {
+    return {
+      title: `我完成了${this.data.distance_data}公里的跑步，用时${this.data.time_data}`,
+      path: '/pages/index/index',
+      imageUrl: '/icon/share-cover.png'
+    }
+  }
 })

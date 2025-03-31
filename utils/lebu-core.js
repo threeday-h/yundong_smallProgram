@@ -43,7 +43,7 @@ var kcal = 0;
 //运动里程(公里)
 var distance = 0;
 var desc = "";
-var speed = 0;
+var speed = "0'00\"";
 
 //初级滤波,使得样本更加平滑
 function filter_calculate(acceleration) {
@@ -231,6 +231,7 @@ function param_output() {
 
 function setHeight(h) {
   height = h;
+  stride = h * 0.4;
 }
 
 function setWeight(w) {
@@ -247,8 +248,27 @@ function reset() {
   stride = 0;
   kcal = 0;
   distance = 0;
-  speed = 0;
+  speed = "0'00\"";
   steps = 0;
+  old_sample_x = 0;
+  old_sample_y = 0;
+  old_sample_z = 0;
+  new_sample_x = 0;
+  new_sample_y = 0;
+  new_sample_z = 0;
+  peak_x_new_max = 0;
+  peak_y_new_max = 0;
+  peak_z_new_max = 0;
+  peak_x_new_min = 0;
+  peak_y_new_min = 0;
+  peak_z_new_min = 0;
+  peak_x_old_max = 0;
+  peak_y_old_max = 0;
+  peak_z_old_max = 0;
+  peak_x_old_min = 0;
+  peak_y_old_min = 0;
+  peak_z_old_min = 0;
+  cur_limit = 0;
 }
 
 function run(res, totalTime) {
@@ -293,12 +313,242 @@ function setSteps(ex_steps) {
   steps = output_step;
 }
 
-module.exports = {
-  param_output: param_output,
-  run: run,
-  setSteps: setSteps,
-  setHeight: setHeight,
-  setWeight: setWeight,
-  getStride: getStride,
-  reset: reset
+function updateMotion(x, y, z) {
+  // 确保步幅已计算
+  if (stride === 0 && height > 0) {
+    stride = height * 0.4;
+    console.log('计算步幅:', stride);
+  }
+  
+  // 计算加速度向量的大小
+  const magnitude = Math.sqrt(x*x + y*y + z*z);
+  
+  // 检测步伐
+  if (lastMagnitude === null) {
+    lastMagnitude = magnitude;
+    return;
+  }
+  
+  // 计算加速度变化
+  const delta = Math.abs(magnitude - lastMagnitude);
+  
+  // 更新上一次的值
+  lastMagnitude = magnitude;
+  
+  // 如果变化超过阈值，认为是一步
+  if (delta > stepThreshold) {
+    // 防止过快检测（至少需要200ms间隔）
+    const now = Date.now();
+    if (now - lastStepTime > 200) {
+      steps++;
+      lastStepTime = now;
+      
+      // 更新距离 (厘米转公里)
+      distance = (steps * stride) / 100000;
+      
+      // 更新卡路里
+      if (weight > 0) {
+        kcal = weight * distance * 1.036;
+      }
+      
+      console.log('检测到步伐 - 步数:', steps, '距离:', distance, '卡路里:', kcal);
+    }
+  }
 }
+
+const lebu = {
+  steps: 0,
+  distance: 0,
+  lastDistance: 0,
+  kcal: 0,
+  speed: "0'00\"",
+  height: 0,
+  weight: 0,
+  stride: 0,
+  lastMagnitude: null,
+  lastStepTime: 0,
+  stepThreshold: 0.6, // 降低阈值，提高灵敏度
+  magnitudeBuffer: [],
+  distanceUpdated: false,
+  
+  updateMotion: function(x, y, z) {
+    // 确保步幅已计算
+    if (this.stride === 0 && this.height > 0) {
+      this.stride = this.height * 0.4;
+      console.log('计算步幅:', this.stride);
+    }
+    
+    // 计算加速度向量的大小
+    const magnitude = Math.sqrt(x*x + y*y + z*z);
+    
+    // 检测步伐
+    if (this.lastMagnitude === null) {
+      this.lastMagnitude = magnitude;
+      this.magnitudeBuffer = [magnitude, magnitude, magnitude, magnitude, magnitude];
+      return;
+    }
+    
+    // 更新缓冲区
+    this.magnitudeBuffer.push(magnitude);
+    if (this.magnitudeBuffer.length > 5) {
+      this.magnitudeBuffer.shift();
+    }
+    
+    // 计算平均值和标准差
+    const avg = this.magnitudeBuffer.reduce((a, b) => a + b, 0) / this.magnitudeBuffer.length;
+    const variance = this.magnitudeBuffer.reduce((a, b) => a + Math.pow(b - avg, 2), 0) / this.magnitudeBuffer.length;
+    const stdDev = Math.sqrt(variance);
+    
+    // 计算加速度变化
+    const delta = Math.abs(magnitude - this.lastMagnitude);
+    
+    // 更新上一次的值
+    this.lastMagnitude = magnitude;
+    
+    // 动态阈值：根据标准差调整灵敏度
+    const dynamicThreshold = Math.max(0.3, Math.min(this.stepThreshold, stdDev * 1.5));
+    
+    // 如果变化超过阈值，认为是一步
+    if (delta > dynamicThreshold) {
+      // 防止过快检测（至少需要150ms间隔，提高灵敏度）
+      const now = Date.now();
+      if (now - this.lastStepTime > 150) {
+        this.steps++;
+        this.lastStepTime = now;
+        
+        // 更新距离 (厘米转公里)
+        this.distance = (this.steps * this.stride) / 100000;
+        
+        // 更新卡路里
+        if (this.weight > 0) {
+          this.kcal = this.weight * this.distance * 1.036;
+        }
+        
+        console.log('检测到步伐 - 步数:', this.steps, '距离:', this.distance, '卡路里:', this.kcal, '阈值:', dynamicThreshold);
+        
+        // 标记距离已更新
+        this.distanceUpdated = true;
+      }
+    }
+  },
+  
+  getDistance: function() {
+    return this.distance;
+  },
+  
+  getKcal: function() {
+    return this.kcal;
+  },
+  
+  getSpeed: function() {
+    return this.speed;
+  },
+  
+  setHeight: function(h) {
+    this.height = h;
+    // 更新步幅
+    if (h > 0) {
+      this.stride = h * 0.4;
+    }
+  },
+  
+  setWeight: function(w) {
+    this.weight = w;
+  },
+  
+  getStride: function() {
+    return this.stride;
+  },
+  
+  reset: function() {
+    this.steps = 0;
+    this.distance = 0;
+    this.lastDistance = 0;
+    this.kcal = 0;
+    this.speed = "0:00";
+    this.lastMagnitude = null;
+    this.lastStepTime = 0;
+    this.magnitudeBuffer = [];
+    this.distanceUpdated = false;
+  },
+  
+  calculatePace: function(timeString) {
+    // 如果距离太小，直接返回默认值
+    if (this.distance < 0.01) return "0:00";
+    
+    try {
+      // 解析时间字符串
+      const parts = timeString.split(':');
+      if (parts.length !== 3) return "0:00";
+      
+      const hours = parseInt(parts[0]) || 0;
+      const minutes = parseInt(parts[1]) || 0;
+      const seconds = parseInt(parts[2]) || 0;
+      
+      // 计算总分钟数
+      const totalMinutes = hours * 60 + minutes + seconds / 60;
+      
+      // 计算配速 (分钟/公里)
+      // 添加安全检查，确保距离不为0
+      const paceValue = totalMinutes / Math.max(0.01, this.distance);
+      
+      // 检查是否是有限数值
+      if (!isFinite(paceValue) || isNaN(paceValue)) {
+        return "0:00";
+      }
+      
+      const paceMinutes = Math.floor(paceValue);
+      const paceSeconds = Math.floor((paceValue - paceMinutes) * 60);
+      
+      // 格式化配速 - 使用简单格式，避免特殊字符问题
+      return paceMinutes + ":" + paceSeconds.toString().padStart(2, '0');
+    } catch (e) {
+      console.error('配速计算错误:', e);
+      return "0:00";
+    }
+  },
+  
+  updatePace: function(timeString) {
+    try {
+      // 如果距离没有变化或太小，保持原来的配速
+      if (this.distance < 0.01 || this.lastDistance === this.distance) {
+        // 确保当前配速是有效的
+        if (!this.speed || this.speed.includes("Infinity") || this.speed.includes("NaN") || this.speed === "NaN:NaN") {
+          this.speed = "0:00";
+        }
+        return this.speed;
+      }
+      
+      // 更新最后记录的距离
+      this.lastDistance = this.distance;
+      
+      // 计算新的配速
+      this.speed = this.calculatePace(timeString);
+      
+      // 确保返回的是有效字符串
+      if (!this.speed || this.speed.includes("Infinity") || this.speed.includes("NaN") || this.speed === "NaN:NaN") {
+        this.speed = "0:00";
+      }
+      
+      console.log('更新配速:', this.speed);
+      return this.speed;
+    } catch (e) {
+      console.error('更新配速错误:', e);
+      return "0:00";
+    }
+  }
+};
+
+// 确保导出所有需要的方法
+module.exports = {
+  updateMotion: lebu.updateMotion.bind(lebu),
+  getDistance: lebu.getDistance.bind(lebu),
+  getKcal: lebu.getKcal.bind(lebu),
+  getSpeed: lebu.getSpeed.bind(lebu),
+  setHeight: lebu.setHeight.bind(lebu),
+  setWeight: lebu.setWeight.bind(lebu),
+  getStride: lebu.getStride.bind(lebu),
+  reset: lebu.reset.bind(lebu),
+  calculatePace: lebu.calculatePace.bind(lebu),
+  updatePace: lebu.updatePace.bind(lebu)
+};

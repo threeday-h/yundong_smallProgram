@@ -1,101 +1,147 @@
-<view wx:if="{{steps == '1'}}">
-	<view class="">
-		<view class="text-center padding-sm margin-top">
-			<text class="text-grey text-xl">欢迎使用Lebu运动小程序</text>
-		</view>
-		<view class="text-center">
-			<text class="text-grey text-sm">完善您的信息让我们为您提供更精准的服务</text>
-		</view>
-		<view class="text-center margin-top-xl">
-			<text class="text-grey text-lg">请问您的性别是?</text>
-		</view>
-		<view class="flex margin-top-md padding justify-center">
-			<button wx:if="{{sex}}" class="cu-btn bg-blue margin-left margin-right round lg" bindtap="changeSex" data-sex="true">男</button>
-			<button wx:if="{{!sex}}" class="cu-btn line-blue margin-left margin-right round lg" bindtap="changeSex" data-sex="true">男</button>
-			<button wx:if="{{!sex}}" class="cu-btn bg-red margin-left margin-right round lg" bindtap="changeSex" data-sex="false">女</button>
-			<button wx:if="{{sex}}" class="cu-btn line-red margin-left margin-right round lg" bindtap="changeSex" data-sex="false">女</button>
-		</view>
+<view class="setting-container">
+	<view class="progress-indicator">
+		<view class="progress-dot {{steps == '1' ? 'active' : ''}}"></view>
+		<view class="progress-dot {{steps == '2' ? 'active' : ''}}"></view>
+		<view class="progress-dot {{steps == '3' ? 'active' : ''}}"></view>
 	</view>
-
-	<view class="text-center padding margin-top">
-		<button class="cu-btn bg-grey round lg" bindtap="next" data-steps="2">下一步</button>
-	</view>
-
-	<view class="text-center padding margin-top">
-  <text class="text-grey text-lg">性别的不同,将会影响卡路里计算的准确性哦。</text>
-</view>
-</view>
-
-<view wx:if="{{steps == '2'}}">
-	<view class="">
-
-		<view class="text-center margin-top-xl">
-			<text class="text-grey text-lg">请问您的身高和体重是?</text>
+	<!-- 第一步：性别选择 -->
+	<view wx:if="{{steps == '1'}}" class="step-container">
+		<view class="header">
+			<view class="title">欢迎加入L-运动</view>
+			<view class="subtitle">完善您的个人信息，我们将为您提供更精准的健康数据</view>
 		</view>
-		<view class="flex margin-top-md padding justify-center bg">
-			<form>
-				<view class="cu-form-group margin-top " style="width:300px">
-					<view class="title">身高</view>
-					<picker bindchange="heightSetting" value="{{height_index}}" range="{{height_picker}}">
-						<view class="picker">
-							{{height_picker[height_index]}} Cm
-						</view>
-					</picker>
+		
+		<view class="question-container">
+			<text class="question">请问您的性别是?</text>
+			
+			<view class="gender-selection">
+				<view class="gender-card {{sex ? 'active' : ''}}" bindtap="changeSex" data-sex="true">
+					<view class="gender-icon-container">
+						<image class="gender-icon" src="/icon/avatar-default.jpg" mode="aspectFit"></image>
+					</view>
+					<view class="gender-label">男生</view>
 				</view>
-				<view class="cu-form-group margin-top">
-					<view class="title">体重</view>
-					<picker bindchange="weightSetting" value="{{weight_index}}" range="{{weight_picker}}">
-						<view class="picker">
-							{{weight_picker[weight_index]}} Kg
-						</view>
-					</picker>
+				
+				<view class="gender-card {{!sex ? 'active' : ''}}" bindtap="changeSex" data-sex="false">
+					<view class="gender-icon-container">
+						<image class="gender-icon" src="/icon/avatar-default-girl.jpg" mode="aspectFit"></image>
+					</view>
+					<view class="gender-label">女生</view>
 				</view>
-			</form>
+			</view>
+		</view>
+		
+		<view class="tip-container">
+			<text class="tip">性别信息将用于计算您的基础代谢率和卡路里消耗，帮助您更准确地追踪健康数据</text>
+		</view>
+		
+		<view class="action-container">
+			<t-button theme="primary" size="large" shape="round" block bindtap="next" data-steps="2">下一步</t-button>
 		</view>
 	</view>
 
-	<view class="text-center padding margin-top">
-  <button class="cu-btn bg-grey margin-left margin-right round lg" bindtap="next" data-steps="1">上一步</button>
-		<button class="cu-btn bg-grey margin-left margin-right round lg" bindtap="next" data-steps="3">下一步</button>
-	</view>
-	<view class="text-center padding margin-top">
-  <text class="text-grey text-lg">身高体重的不同,将会影响卡路里和运动里程,运动配速的计算准确性哦。</text>
-</view>
-</view>
-
-<view wx:if="{{steps == '3'}}">
-	<view class="">
-
-		<view class="text-center margin-top-xl">
-			<text class="text-grey text-lg">请设定您的路程和卡路里目标:</text>
-		</view>
-		<view class="flex margin-top-md padding justify-center bg">
-			<form>
-				<view class="cu-form-group margin-top " style="width:300px">
-					<view class="title">路程</view>
-					<picker bindchange="distanceSetting" value="{{distance_index}}" range="{{distance_picker}}">
-						<view class="picker">
-							{{distance_picker[distance_index]}} Km
-						</view>
-					</picker>
+	<!-- 第二步：身高体重设置 -->
+	<view wx:if="{{steps == '2'}}" class="step-container">
+		<view class="question-container">
+			<text class="question">请问您的身高和体重是?</text>
+			
+			<view class="form-container">
+				<view class="form-item" bindtap="showHeightPicker">
+					<view class="form-label">身高</view>
+					<view class="form-value">{{height_picker[height_index]}} Cm <text class="arrow">></text></view>
 				</view>
-				<view class="cu-form-group margin-top">
-					<view class="title">卡路里</view>
-					<picker bindchange="kcalSetting" value="{{kcal_index}}" range="{{kcal_picker}}">
-						<view class="picker">
-							{{kcal_picker[kcal_index]}} Kcal
-						</view>
-					</picker>
+				
+				<view class="form-item" bindtap="showWeightPicker">
+					<view class="form-label">体重</view>
+					<view class="form-value">{{weight_picker[weight_index]}} Kg <text class="arrow">></text></view>
 				</view>
-			</form>
+			</view>
 		</view>
-		<view class="text-center padding margin-top">
-  <text class="text-grey text-lg">每周目标的完成进度,将在每周日自动重置。</text>
-</view>
+		
+		<view class="tip-container">
+			<text class="tip">身高体重数据将用于计算BMI指数、卡路里消耗和运动强度，为您提供个性化的健康建议</text>
+		</view>
+		
+		<view class="action-container">
+			<t-button theme="default" variant="outline" size="large" shape="round" bindtap="next" data-steps="1">上一步</t-button>
+			<t-button theme="primary" size="large" shape="round" bindtap="next" data-steps="3">下一步</t-button>
+		</view>
 	</view>
 
-	<view class="text-center padding margin-top">
-  <button class="cu-btn bg-grey margin-left margin-right round lg" bindtap="next" data-steps="2">上一步</button>
-		<button class="cu-btn bg-grey margin-left margin-right round lg" bindtap="next" data-steps="4">完成</button>
+	<!-- 第三步：目标设置 -->
+	<view wx:if="{{steps == '3'}}" class="step-container">
+		<view class="question-container">
+			<text class="question">请设定您的路程和卡路里目标:</text>
+			
+			<view class="form-container">
+				<view class="form-item" bindtap="showDistancePicker">
+					<view class="form-label">路程</view>
+					<view class="form-value">{{distance_picker[distance_index]}} Km <text class="arrow">></text></view>
+				</view>
+				
+				<view class="form-item" bindtap="showKcalPicker">
+					<view class="form-label">卡路里</view>
+					<view class="form-value">{{kcal_picker[kcal_index]}} Kcal <text class="arrow">></text></view>
+				</view>
+			</view>
+		</view>
+		
+		<view class="tip-container">
+			<text class="tip">设定每周目标可以帮助您保持运动习惯，系统将在每周日自动重置进度，开启新的挑战</text>
+		</view>
+		
+		<view class="action-container">
+			<t-button theme="default" variant="outline" size="large" shape="round" bindtap="next" data-steps="2">上一步</t-button>
+			<t-button theme="success" size="large" shape="round" bindtap="next" data-steps="4">完成</t-button>
+		</view>
 	</view>
+
+	<!-- 添加底部的选择器弹出层 -->
+	<t-picker
+		visible="{{heightPickerVisible}}"
+		title="选择身高"
+		cancelBtn="取消"
+		confirmBtn="确认"
+		bindchange="heightSetting"
+		bindcancel="closeHeightPicker"
+		value="{{heightValue}}"
+	>
+		<t-picker-item options="{{heightOptions}}"></t-picker-item>
+	</t-picker>
+
+	<t-picker
+		visible="{{weightPickerVisible}}"
+		title="选择体重"
+		cancelBtn="取消"
+		confirmBtn="确认"
+		bindchange="weightSetting"
+		bindcancel="closeWeightPicker"
+		value="{{weightValue}}"
+	>
+		<t-picker-item options="{{weightOptions}}"></t-picker-item>
+	</t-picker>
+
+	<t-picker
+		visible="{{distancePickerVisible}}"
+		title="选择路程目标"
+		cancelBtn="取消"
+		confirmBtn="确认"
+		bindchange="distanceSetting"
+		bindcancel="closeDistancePicker"
+		value="{{distanceValue}}"
+	>
+		<t-picker-item options="{{distanceOptions}}"></t-picker-item>
+	</t-picker>
+
+	<t-picker
+		visible="{{kcalPickerVisible}}"
+		title="选择卡路里目标"
+		cancelBtn="取消"
+		confirmBtn="确认"
+		bindchange="kcalSetting"
+		bindcancel="closeKcalPicker"
+		value="{{kcalValue}}"
+	>
+		<t-picker-item options="{{kcalOptions}}"></t-picker-item>
+	</t-picker>
 </view>

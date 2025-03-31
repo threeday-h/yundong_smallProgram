@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/login/index",
     "pages/run/index",
     "pages/run/statement",
     "pages/setting/index",
@@ -8,7 +9,6 @@
     "pages/history/index",
     "pages/history/detail",
     "pages/aboutus/index",
-    "pages/login/index",
     "pages/login/setting",
     "pages/share/index",
     "pages/bmi/index"
@@ -20,7 +20,21 @@
     "navigationBarTitleText": "活力健身房"
   },
   "usingComponents": {
-
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-tab-bar": "tdesign-miniprogram/tab-bar/tab-bar",
+    "t-tab-bar-item": "tdesign-miniprogram/tab-bar-item/tab-bar-item",
+    "t-avatar": "tdesign-miniprogram/avatar/avatar",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",
+    "t-picker": "tdesign-miniprogram/picker/picker",
+    "t-picker-item": "tdesign-miniprogram/picker-item/picker-item",
+    "t-progress": "tdesign-miniprogram/progress/progress",
+    "t-tag": "tdesign-miniprogram/tag/tag",
+    "t-check-tag": "tdesign-miniprogram/check-tag/check-tag",
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-empty": "tdesign-miniprogram/empty/empty",
+    "t-tabs": "tdesign-miniprogram/tabs/tabs",
+    "t-tab-panel": "tdesign-miniprogram/tab-panel/tab-panel"
   },
   
   "tabBar": {
@@ -28,6 +42,7 @@
     "borderStyle": "white",
     "selectedColor": "@tabBarSelectedColor",
     "color": "@tabBarColor",
+    "custom": true,
     "list": [{
       "pagePath": "pages/index/index",
       "iconPath": "@runIcon",
@@ -38,7 +53,7 @@
       "pagePath": "pages/me/index",
       "iconPath": "@personIcon",
       "selectedIconPath": "@personSelectedIcon",
-      "text": "我"
+      "text": "我的"
     }]
   },
   "permission": {
@@ -47,12 +62,34 @@
     },
     "scope.writePhotosAlbum": {
       "desc": "您的相册授权仅用于保存您的运动海报"
+    },
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于记录跑步轨迹"
     }
   },
   "darkmode": false,
   "themeLocation":"theme.json",
   "cloud": true,
   "requiredBackgroundModes": ["location"],
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "subpackages": [
+    {
+      "root": "packageRun",
+      "pages": [
+        "pages/run/index"
+      ]
+    },
+    {
+      "root": "packageAssets",
+      "pages": [
+        "pages/assets/index"
+      ]
+    }
+  ],
+  "requiredPrivateInfos": [
+    "getLocation",
+    "startLocationUpdate",
+    "onLocationChange"
+  ]
 }
 

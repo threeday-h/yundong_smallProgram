@@ -5,10 +5,13 @@ const app = getApp()
 
 Page({
   data: {
-    _msg: '反编译的人,我是你爹,NMSL',
+    _msg: '反',
     distance_target: wx.getStorageSync('distance'),
     kcal_target: wx.getStorageSync('kcal'),
-    series: []
+    series: [],
+    greeting: '你好',
+    avatarUrl: '',
+    nickName: ''
   },
   toRun() {
     this.vibrateFunc(1);
@@ -23,12 +26,19 @@ Page({
     })
   },
   onShow(){
+    console.log(wx.getStorageInfoSync());
     
-    if(wx.getStorageInfoSync().keys.length == 0){
+    if(wx.getStorageInfoSync().keys.length < 1){
       wx.navigateTo({
         url: '../login/index',
       })
     }
+
+    // 获取用户信息
+    this.getUserInfo();
+    
+    // 设置问候语
+    this.setGreeting();
 
     let end_date = Date.now();
     let start_date = (Date.now() - (new Date().getDay() + 1) * 86400000);
@@ -88,11 +98,11 @@ Page({
     }
 
     let series = [{
-      "color": "#2fc25b",
+      "color": "#0052d9",
       "data": global_target,
       "index": 0,
       "legendShape": "circle",
-      "name": "正确率",
+      "name": "完成率",
       "pointShape": "circle",
       "show": true,
       "type": "arcbar"
@@ -124,13 +134,43 @@ Page({
     });
 
     this.showArcbar("canvasArcbar", series)
+
+    // 设置自定义 TabBar 的选中状态
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        value: 'index'
+      });
+    }
   },
   onLoad: function () {
     
-
-
+  },
+  // 获取用户信息
+  getUserInfo() {
+    const avatarUrl = wx.getStorageSync('avatarUrl');
+    const nickName = wx.getStorageSync('nickName');
     
-
+    this.setData({
+      avatarUrl: avatarUrl || '',
+      nickName: nickName || ''
+    });
+  },
+  // 设置问候语
+  setGreeting() {
+    const hour = new Date().getHours();
+    let greeting = '';
+    
+    if (hour >= 5 && hour < 12) {
+      greeting = '早上好';
+    } else if (hour >= 12 && hour < 14) {
+      greeting = '中午好';
+    } else if (hour >= 14 && hour < 18) {
+      greeting = '下午好';
+    } else {
+      greeting = '晚上好';
+    }
+    
+    this.setData({ greeting });
   },
   showArcbar(canvasId, chartData) {
     // console.log(chartData)
@@ -151,7 +191,7 @@ Page({
       dataLabel: true,
       title: {
         name: Math.round(chartData[0].data * 100) + '%',
-        color: chartData.color,
+        color: chartData[0].color,
         fontSize: 25
       },
       subtitle: {
@@ -162,7 +202,10 @@ Page({
       extra: {
         arcbar: {
           type: 'default',
-          width: 10
+          width: 12,
+          backgroundColor: '#f5f5f5',
+          startAngle: 0.75,
+          endAngle: 0.25
         }
       }
     });

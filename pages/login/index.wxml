@@ -1,15 +1,41 @@
-<view class="">
-<view class="text-center padding margin-top-xl">
-  <text class="text-grey text-xl">计划向导</text>
-</view>
-    <view class="flex padding margin-top-xl justify-center">
-      <view class="cu-avatar xl round"><text class="cuIcon-people"></text></view>
+<view class="login-container">
+  <view class="header">
+    <text class="app-title">计划向导</text>
+    <text class="app-subtitle">您的个人运动管理助手</text>
+  </view>
+  
+  <view class="avatar-container">
+    <view class="user-info">
+      <view class="avatar-section">
+        <t-avatar class="user-avatar" image="{{avatarUrl}}" size="large" />
+        <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+          <view class="avatar-tip">点击更换头像</view>
+        </button>
+      </view>
+      
+      <view class="nickname-display" bindtap="toggleNicknameEdit">
+        <text class="nickname-text">{{userInfo.nickName || '追风者-小帅'}}</text>
+        <text class="edit-icon">✎</text>
+      </view>
+      
+      <form bindsubmit="submitNickname" wx:if="{{isEditingNickname}}">
+        <view class="nickname-container">
+          <input name="nickname" class="weui-input" focus="{{isEditingNickname}}"
+                 value="{{userInfo.nickName || '追风者-小帅'}}" bindinput="onInputNickname"/>
+        </view>
+        <view class="btn-group">
+          <button class="cancel-btn" bindtap="toggleNicknameEdit">取消</button>
+          <button form-type="submit" class="submit-btn">确认</button>
+        </view>
+      </form>
     </view>
-    <view class="flex margin-top padding justify-center">
-      <button class="cu-btn bg-green round lg" bindtap="redirect">开始使用</button>
-    </view>
-</view>
+  </view>
+  
+  <view class="action-container">
+    <t-button theme="primary" shape="round" bindtap="redirect" class="start-button">开始使用</t-button>
+  </view>
 
-<view class="text-center padding margin-top">
-  <text class="text-grey text-xl">运动数据仅保存于本地,请妥善保管。</text>
+  <view class="footer">
+    <text class="privacy-notice">运动数据仅保存于本地，请妥善保管。</text>
+  </view>
 </view>

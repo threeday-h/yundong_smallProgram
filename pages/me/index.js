@@ -55,5 +55,12 @@ Page({
       }
     }
   },
-
+  onShow: function() {
+    // 设置自定义 TabBar 的选中状态
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({
+        value: 'me'
+      });
+    }
+  },
 })

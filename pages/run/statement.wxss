@@ -1,1 +1,243 @@
 /* pages/run/statement.wxss */
+/* 配速显示样式 */
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx;
+}
+
+.stat-title {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.icon-wrapper {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 10rpx;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.speed-icon {
+  background-image: url('data:image/svg+xml;base64,...'); /* 使用与其他图标相同的样式 */
+}
+
+.metric-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin: 10rpx 0;
+}
+
+.metric-unit {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 5rpx;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 120rpx;
+}
+
+/* 地图区域 */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+
+.map-overlay {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  z-index: 10;
+}
+
+.run-type-badge {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 82, 217, 0.8);
+  padding: 8rpx 16rpx;
+  border-radius: 30rpx;
+}
+
+.run-type-badge text {
+  color: #fff;
+  font-size: 24rpx;
+  margin-left: 8rpx;
+}
+
+.run-type-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: linear-gradient(135deg, #f0f7ff, #e6f0ff);
+}
+
+.run-type-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-top: 20rpx;
+}
+
+/* 运动数据卡片 */
+.stats-card {
+  margin: 30rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* 主要数据 */
+.main-stats {
+  display: flex;
+  padding: 40rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.main-stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.divider {
+  width: 1rpx;
+  background-color: #f0f0f0;
+  align-self: stretch;
+  margin: 10rpx 0;
+}
+
+.stat-value {
+  font-size: 60rpx;
+  font-weight: bold;
+  color: #333;
+  line-height: 1.2;
+}
+
+.stat-unit {
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 4rpx;
+}
+
+.stat-label {
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 16rpx;
+}
+
+/* 次要数据 */
+.secondary-stats {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.secondary-stat-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.secondary-stat-item:last-child {
+  margin-bottom: 0;
+}
+
+.secondary-stat-content {
+  margin-left: 20rpx;
+}
+
+.secondary-stat-label {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+}
+
+.secondary-stat-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-top: 4rpx;
+}
+
+/* 每公里配速 */
+.km-pace-section {
+  padding: 30rpx;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.section-title text {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-left: 10rpx;
+}
+
+.km-pace-list {
+  max-height: 400rpx;
+  overflow-y: auto;
+}
+
+.km-pace-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.km-number {
+  width: 80rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.km-pace-bar {
+  flex: 1;
+  margin: 0 20rpx;
+}
+
+.km-pace {
+  width: 100rpx;
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #333;
+  text-align: right;
+}
+
+/* 底部按钮 */
+.bottom-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 30rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 -4rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.bottom-buttons .t-button {
+  flex: 1;
+  margin: 0 10rpx;
+}

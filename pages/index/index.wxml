@@ -1,99 +1,97 @@
-<view class="bg-white">
-	<view class="flex padding">
-		<view class="flex-sub"></view>
-		<view class="flex-twice">
-			<!-- 运动进度概览 -->
+<view class="page-container">
+	<!-- 顶部用户信息和问候语 -->
+	<view class="header-section">
+		<view class="user-profile">
+			<t-avatar class="user-avatar" image="{{avatarUrl || '/icon/avatar-default.jpg'}}" size="medium" />
+			<view class="user-info">
+				<text class="user-name">{{nickName || '追风者'}}</text>
+				<text class="greeting">{{greeting}}，开始今天的计划吧！</text>
+			</view>
+		</view>
+	</view>
+
+	<!-- 运动进度概览 -->
+	<view class="card progress-card">
+		<view class="progress-chart-container">
 			<canvas canvas-id="canvasArcbar" id="canvasArcbar" class="charts"></canvas>
 		</view>
-		<view class="flex-sub"></view>
+		<view class="start-btn-container">
+			<t-button theme="primary" icon="play" shape="round" size="large" bindtap="toRun" block>开始跑步</t-button>
+		</view>
 	</view>
-	<view class="flex padding solid-bottom">
-		<view class="flex-sub"></view>
-		<view class="flex-twice text-center">
-			<button class="cu-btn bg-green round lg" bindtap="toRun">开始跑步</button>
-		</view>
-		<view class="flex-sub"></view>
-	</view>
-	<!-- <view class="cu-bar bg-white solid-bottom margin-top">
-		<view class='action'>
-			<text class='cuIcon-titles text-green '></text> 每周进度
-		</view>
-	</view> -->
-	<view class="flex padding-left padding-right solid-bottom">
 
-		<view class="flex-sub" bindtap="tips" data-type="kcal">
-			<view class="cu-bar bg-white ">
-				<view class="action">
-					<text class="cuIcon-title text-blue"></text>运动里程<text class="cuIcon-info lg text-gray"></text>
-				</view>
-			</view>
-			<view class="flex margin-top">
-				<view class="cu-progress round">
-					<view class="bg-blue" style="width:{{(distance_target == 0)?'100':prog_distance}}%;"></view>
-				</view>
-				<text class="margin-left">{{(distance_target == 0)?'100':prog_distance}}%</text>
-			</view>
-		</view>
-
-		<view class="flex-sub" bindtap="tips" data-type="kcal">
-			<view class="cu-bar bg-white ">
-				<view class="action">
-					<text class="cuIcon-title text-red"></text>卡路里消耗<text class="cuIcon-info lg text-gray"></text>
-				</view>
-			</view>
-			<view class="padding bg-white ">
-				<view class="flex">
-					<view class="cu-progress round">
-						<view class="bg-red" style="width:{{(kcal_target == 0)?'100':prog_kcal}}%;"></view>
+	<!-- 周目标进度卡片 -->
+	<view class="card goals-card">
+		<view class="card-title">本周目标</view>
+		<view class="card-content">
+			<view class="goal-item" bindtap="tips" data-type="distance">
+				<view class="goal-header">
+					<view class="goal-title">
+						<t-icon name="location" size="20" color="#0052d9" />
+						<text>运动里程</text>
 					</view>
-					<text class="margin-left">{{(kcal_target == 0)?'100':prog_kcal}}%</text>
+					<view class="goal-value">{{cur_distance || 0}}/{{distance_target || 0}} km</view>
 				</view>
+				<t-progress 
+					class="goal-progress" 
+					percentage="{{(distance_target == 0) ? 100 : prog_distance}}" 
+					color="#0052d9" 
+					track-color="#e7e7e7" 
+					stroke-width="10" />
+			</view>
+
+			<view class="goal-item" bindtap="tips" data-type="kcal">
+				<view class="goal-header">
+					<view class="goal-title">
+						<t-icon name="fire" size="20" color="#ff4d4f" />
+						<text>卡路里消耗</text>
+					</view>
+					<view class="goal-value">{{cur_kcal || 0}}/{{kcal_target || 0}} kcal</view>
+				</view>
+				<t-progress 
+					class="goal-progress" 
+					percentage="{{(kcal_target == 0) ? 100 : prog_kcal}}" 
+					color="#ff4d4f" 
+					track-color="#e7e7e7" 
+					stroke-width="10" />
 			</view>
 		</view>
-
 	</view>
 
-	<view class="cu-bar bg-white solid-bottom margin-top">
-		<view class='action'>
-			<text class='cuIcon-titles text-orange '></text> 最近活动
+	<!-- 最近活动卡片 -->
+	<view class="card recent-activity-card">
+		<view class="card-header">
+			<view class="card-title">最近活动</view>
+			<view class="more-link" bindtap="toHistory">更多</view>
 		</view>
-		<view class='action'>
-			<text class='text-green'bindtap="toHistory">更多</text>
-		</view>
-	</view>
-	<view class="cu-card article  ">
-		<view class="cu-item shadow">
-
-			<view wx:if="{{runinfo_data.length > 0}}">
-				<view bindtap="toDetail" data-id="{{runinfo_data[0].id}}">
-					<view class="title">
-						<view class="text-cut">{{runinfo_data[0].time_format}}</view>
-					</view>
-					<view class="content">
-						<image src="../../icon/run-sub.png" mode="aspectFit" style="height:5.4em"></image>
-						<view class="desc">
-							<view class="text-content"><text >运动里程:{{runinfo_data[0].distance_data}} Km</text></view>
-							<view>
-								<view class="cu-tag bg-green light sm round">{{runinfo_data[0].time_data}}</view>
-								<view class="cu-tag bg-orange light sm round">{{runinfo_data[0].speed_data}}</view>
-								<view class="cu-tag bg-red light sm round">{{runinfo_data[0].kcal_data}} Kcal</view>
-								<view wx:if="{{runinfo_data[0].runType == 0}}" class="cu-tag bg-blue light sm round">户外跑</view>
-							<view wx:if="{{runinfo_data[0].runType == 1}}" class="cu-tag bg-blue light sm round">室内跑</view>
+		<view class="card-content">
+			<block wx:if="{{runinfo_data.length > 0}}">
+				<view class="activity-item" bindtap="toDetail" data-id="{{runinfo_data[0].id}}">
+					<view class="activity-time">{{runinfo_data[0].time_format}}</view>
+					<view class="activity-content">
+						<view class="activity-icon">
+							<t-icon name="run" size="48" color="#0052d9" />
+						</view>
+						<view class="activity-details">
+							<view class="activity-distance">{{runinfo_data[0].distance_data}} km</view>
+							<view class="activity-tags">
+								<t-tag class="activity-tag" variant="light" theme="primary">{{runinfo_data[0].time_data}}</t-tag>
+								<t-tag class="activity-tag" variant="light" theme="warning">{{runinfo_data[0].speed_data}}</t-tag>
+								<t-tag class="activity-tag" variant="light" theme="danger">{{runinfo_data[0].kcal_data}} kcal</t-tag>
+								<t-tag class="activity-tag" variant="light" theme="success">
+									{{runinfo_data[0].runType == 0 ? '户外跑' : '室内跑'}}
+								</t-tag>
 							</view>
 						</view>
 					</view>
 				</view>
-
-
-
+			</block>
+			<view wx:else class="no-activity">
+				<t-empty icon="info-circle-filled" description="暂无历史运动记录" />
 			</view>
-			<view wx:else>
-				<view class="text-center padding margin-top">
-					<text class="text-grey text-xl">暂无历史运动记录</text>
-				</view>
-			</view>
-
 		</view>
 	</view>
-
+	
+	<!-- 底部安全区域，防止内容被 tabbar 遮挡 -->
+	<view class="safe-area-bottom"></view>
 </view>

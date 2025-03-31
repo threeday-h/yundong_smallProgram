@@ -1,0 +1,9 @@
+.t-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  --td-tab-bar-border-color: transparent;
+  --td-tab-bar-bg-color: #fff;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+} 

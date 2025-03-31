@@ -1,1 +1,279 @@
 /* pages/share/index.wxss */
+.share-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 30rpx;
+  padding-bottom: 180rpx;
+}
+
+/* 分享卡片 */
+.share-card {
+  position: relative;
+  width: 100%;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 40rpx;
+  background-color: #fff;
+}
+
+/* 背景图 */
+.share-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0.65; /* 进一步提高透明度，使背景图更加明显 */
+}
+
+/* 卡片内容 */
+.card-content {
+  position: relative;
+  z-index: 2;
+  padding: 40rpx;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7));
+}
+
+/* 顶部信息 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.app-info {
+  display: flex;
+  align-items: center;
+}
+
+.app-logo {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 12rpx;
+}
+
+/* 应用名称 */
+.app-name {
+  font-size: 38rpx;
+  font-weight: bold;
+  color: #0052d9; /* 使用主题色 */
+  margin-left: 16rpx;
+  text-shadow: 0 1px 2px rgba(0, 82, 217, 0.1); /* 添加轻微文字阴影 */
+  letter-spacing: 1px; /* 增加字间距 */
+}
+
+.share-date {
+  font-size: 30rpx;
+  color: #555;
+  font-weight: 500;
+}
+
+/* 运动类型 */
+.run-type-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #0052d9;
+  padding: 14rpx 28rpx;
+  border-radius: 30rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 82, 217, 0.2);
+}
+
+.run-type-badge text {
+  color: #fff;
+  font-size: 30rpx;
+  margin-left: 12rpx;
+  font-weight: 500;
+}
+
+/* 主要数据 */
+.main-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+.data-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.data-divider {
+  width: 2rpx;
+  height: 120rpx;
+  background-color: #eee;
+  margin: 0 20rpx;
+}
+
+.data-value {
+  font-size: 70rpx;
+  font-weight: bold;
+  color: #222;
+  line-height: 1.2;
+}
+
+.data-unit {
+  font-size: 26rpx;
+  color: #555;
+  margin-top: 6rpx;
+  font-weight: 500;
+}
+
+.data-label {
+  font-size: 30rpx;
+  color: #777;
+  margin-top: 16rpx;
+}
+
+/* 次要数据 */
+.secondary-data {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40rpx;
+}
+
+.secondary-item {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin: 0 10rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+.secondary-label {
+  font-size: 26rpx;
+  color: #777;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.secondary-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #222;
+}
+
+/* 地图部分 */
+.map-section {
+  width: 100%;
+  margin-bottom: 40rpx;
+}
+
+.map-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.map-title text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-left: 8rpx;
+}
+
+.map-container {
+  width: 100%;
+  height: 450rpx; /* 增加地图高度 */
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 底部信息 */
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 30rpx;
+}
+
+/* 二维码部分 */
+.footer-qrcode-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 24rpx 30rpx;
+  border-radius: 18rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.1);
+  width: 90%;
+}
+
+.footer-qrcode {
+  width: 160rpx; /* 进一步增大二维码尺寸 */
+  height: 160rpx;
+  border-radius: 12rpx;
+  margin-right: 24rpx;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.qrcode-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.qrcode-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #0052d9; /* 使用主题色 */
+  margin-bottom: 10rpx;
+}
+
+.qrcode-desc {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 1.4;
+}
+
+.footer-slogan {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #0052d9;
+  margin-bottom: 16rpx;
+}
+
+.footer-tip {
+  font-size: 26rpx;
+  color: #777;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 30rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.action-buttons .t-button {
+  flex: 1;
+  margin: 0 10rpx;
+}

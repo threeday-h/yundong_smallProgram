@@ -5,3 +5,502 @@
   height: 500rpx;
   background-color: #FFFFFF;
 }
+
+/* pages/history/detail.wxss */
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 120rpx;
+}
+
+/* 地图区域 */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+
+.map-overlay {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  z-index: 10;
+}
+
+.run-type-badge {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 82, 217, 0.8);
+  padding: 8rpx 16rpx;
+  border-radius: 30rpx;
+}
+
+.run-type-badge text {
+  color: #fff;
+  font-size: 24rpx;
+  margin-left: 8rpx;
+}
+
+.run-type-header {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.run-type-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.run-type-content {
+  position: relative;
+  right: 10rpx;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx;
+  border-radius: 16rpx;
+}
+
+.run-type-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 20rpx;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 运动数据卡片 */
+.stats-card {
+  margin: 30rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* 日期和时间 */
+.date-time-section {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.date-time-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-left: 10rpx;
+}
+
+/* 数据网格 */
+.data-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 30rpx;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.data-grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-item-label {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.grid-item-value-container {
+  display: flex;
+  align-items: baseline;
+}
+
+.grid-item-value {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.grid-item-unit {
+  font-size: 24rpx;
+  color: #666;
+  margin-left: 6rpx;
+}
+
+/* 配速图表 */
+.chart-section {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.section-title text {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-left: 10rpx;
+}
+
+.pace-chart {
+  display: flex;
+  height: 400rpx;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.chart-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 20rpx;
+  width: 60rpx;
+}
+
+.y-axis-label {
+  font-size: 22rpx;
+  color: #999;
+  height: 30rpx;
+  line-height: 30rpx;
+}
+
+.chart-content {
+  flex: 1;
+  position: relative;
+}
+
+.chart-grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.grid-line {
+  height: 1rpx;
+  background-color: #f0f0f0;
+  width: 100%;
+}
+
+.chart-bars {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  align-items: flex-end;
+  padding-bottom: 30rpx; /* 为底部标签留出空间 */
+}
+
+.chart-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.bar-column {
+  width: 30rpx;
+  background-color: #0052d9;
+  border-radius: 30rpx 30rpx 0 0;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.bar-value {
+  position: absolute;
+  top: -40rpx;
+  font-size: 20rpx;
+  color: #666;
+  white-space: nowrap;
+}
+
+.bar-label {
+  position: absolute;
+  bottom: -30rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 40rpx 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 轨迹分析 */
+.track-section {
+  padding: 30rpx;
+}
+
+.track-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 30rpx;
+}
+
+.track-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-stat-label {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.track-stat-value {
+  font-size: 28rpx;
+  color: #333;
+  word-break: break-all;
+}
+
+/* 底部按钮 */
+.bottom-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 30rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 -4rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.bottom-buttons .t-button {
+  flex: 1;
+  margin: 0 10rpx;
+}
+
+/* 图表样式 */
+.charts {
+  width: 100%;
+  height: 500rpx;
+  background-color: #FFFFFF;
+}
+
+.original-chart {
+  margin-top: 30rpx;
+}
+
+/* 室内跑样式 - 优化背景 */
+.indoor-run-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* 背景图 */
+.indoor-bg-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* 背景装饰 */
+.indoor-bg-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 82, 217, 0.3), rgba(0, 82, 217, 0.5));
+  opacity: 0.7;
+}
+
+.track-line {
+  position: absolute;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+}
+
+.track-line-1 {
+  top: 40%;
+  left: -10%;
+  width: 120%;
+  transform: rotate(-2deg);
+}
+
+.track-line-2 {
+  top: 70%;
+  left: -10%;
+  width: 120%;
+  transform: rotate(2deg);
+}
+
+/* 主要内容 */
+.indoor-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40rpx;
+}
+
+.indoor-icon-container {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.4;
+  }
+}
+
+.indoor-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.indoor-title {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10rpx;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  letter-spacing: 4rpx;
+}
+
+.indoor-subtitle {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 2rpx;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 装饰元素 */
+.indoor-decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.deco-circle-1 {
+  width: 500rpx;
+  height: 500rpx;
+  top: -150rpx;
+  right: -150rpx;
+}
+
+.deco-circle-2 {
+  width: 400rpx;
+  height: 400rpx;
+  bottom: -100rpx;
+  left: -100rpx;
+}
+
+.deco-dot-grid {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 200rpx;
+  height: 200rpx;
+  background-image: 
+    radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  opacity: 0.5;
+}
+
+/* 添加动态波浪效果 */
+.wave-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100rpx;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230052d9" fill-opacity="0.05" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+  background-repeat: repeat-x;
+  background-position: 0 bottom;
+  background-size: 50% 100%;
+  animation: wave 20s linear infinite;
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
